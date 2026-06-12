@@ -1,48 +1,47 @@
 import java.util.*;
 
 public class Main {
-
-    public static int longestBalancedSubstring(String s) {
-
-        HashMap<Integer, Integer> map = new HashMap<>();
-
-        int prefixSum = 0;
-        int maxLen = 0;
-
-        map.put(0, -1);
-
-        for (int i = 0; i < s.length(); i++) {
-
-            if (s.charAt(i) == '0')
-                prefixSum += -1;
-            else
-                prefixSum += 1;
-
-            if (map.containsKey(prefixSum)) {
-
-                int len = i - map.get(prefixSum);
-                maxLen = Math.max(maxLen, len);
-
-            } else {
-
-                map.put(prefixSum, i);
-            }
-        }
-
-        return maxLen;
-    }
-
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Enter a binary string: ");
-        String s = sc.next();
+        int n = sc.nextInt();
+        int k = sc.nextInt();
+        int q = sc.nextInt();
 
-        int ans = longestBalancedSubstring(s);
+        int limit = 200000;
 
-        System.out.println("Length of longest balanced substring = " + ans);
+        int arr[] = new int[limit + 2];
 
-        sc.close();
+        for (int i = 0; i < n; i++) {
+            int l = sc.nextInt();
+            int r = sc.nextInt();
+
+            arr[l]++;
+            arr[r + 1]--;
+        }
+
+        int cover[] = new int[limit + 1];
+
+        for (int i = 1; i <= limit; i++) {
+            cover[i] = cover[i - 1] + arr[i];
+        }
+
+        int pre[] = new int[limit + 1];
+
+        for (int i = 1; i <= limit; i++) {
+            pre[i] = pre[i - 1];
+
+            if (cover[i] >= k) {
+                pre[i]++;
+            }
+        }
+
+        while (q-- > 0) {
+            int l = sc.nextInt();
+            int r = sc.nextInt();
+
+            System.out.println(pre[r] - pre[l - 1]);
+        }
     }
 }
